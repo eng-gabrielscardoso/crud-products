@@ -21,7 +21,7 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'title')
+                    ->relationship('category', 'id')
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
