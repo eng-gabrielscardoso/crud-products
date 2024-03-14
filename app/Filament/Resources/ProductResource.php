@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Models\Category;
+use App\Filament\Resources\ProductResource\Pages;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class CategoryResource extends Resource
+class ProductResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -20,7 +20,10 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'title')
+                    ->required(),
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('url')
@@ -28,6 +31,14 @@ class CategoryResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('quantity')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->numeric()
+                    ->prefix('$'),
             ]);
     }
 
@@ -35,10 +46,19 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('category.id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('url')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -72,10 +92,10 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'view' => Pages\ViewCategory::route('/{record}'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListProducts::route('/'),
+            'create' => Pages\CreateProduct::route('/create'),
+            'view' => Pages\ViewProduct::route('/{record}'),
+            'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
 }
