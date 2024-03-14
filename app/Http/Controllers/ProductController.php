@@ -39,6 +39,14 @@ class ProductController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Product $product)
+    {
+        return $this->repository->findById($product->id);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProductRequest $request, Product $product)

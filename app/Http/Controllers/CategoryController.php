@@ -5,23 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Repositories\Contracts\CategoryRepositoryContract;
 
 class CategoryController extends Controller
 {
+    /**
+     * The data model for this controller
+     */
+    protected CategoryRepositoryContract $repository;
+
+    /**
+     * Create a new instance of this controller
+     */
+    public function __construct(CategoryRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->repository->findAll();
     }
 
     /**
@@ -29,7 +35,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        return $this->repository->store($request->all());
     }
 
     /**
@@ -37,15 +43,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
+        return $this->repository->findById($category->id);
     }
 
     /**
@@ -53,7 +51,7 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        return $this->repository->update($category->id, $request->all());
     }
 
     /**
@@ -61,6 +59,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        return $this->repository->delete($category->id);
     }
 }

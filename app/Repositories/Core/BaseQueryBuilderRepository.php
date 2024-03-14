@@ -3,38 +3,39 @@
 namespace App\Repositories\Core;
 
 use App\Repositories\Contracts\RepositoryContract;
-use App\Repositories\Exceptions\UndefinedEntityException;
+use App\Repositories\Exceptions\UndefinedTableException;
+use Illuminate\Support\Facades\DB;
 
-abstract class BaseEloquentRepository implements RepositoryContract
+abstract class BaseQueryBuilderRepository implements RepositoryContract
 {
     /**
      * The data model for repository
      */
-    protected $entity;
+    protected $table;
 
     /**
-     * Create a new eloquent repository
+     * Create a new query builder repository
      */
     public function __construct()
     {
-        $this->entity = $this->resolveEntity();
+        $this->table = $this->resolveTable();
     }
 
     /**
-     * Returns the entity accessor
+     * Returns the table accessor
      */
-    abstract public function entity(): string;
+    abstract public function table(): string;
 
     /**
-     * Evaluate the entity of instance
+     * Evaluate the table of instance
      *
-     * @throws \App\Repositories\Exceptions\UndefinedEntityException
+     * @throws \App\Repositories\Exceptions\UndefinedTableException
      */
-    public function resolveEntity(): mixed
+    public function resolveTable(): mixed
     {
-        throw_unless(method_exists($this, 'entity'), UndefinedEntityException::class);
+        throw_unless(method_exists($this, 'table'), UndefinedTableException::class);
 
-        return app($this->entity());
+        return DB::table($this->table());
     }
 
     /**
@@ -42,7 +43,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function findAll(): mixed
     {
-        return $this->entity->get();
+        return $this->table->get();
     }
 
     /**
@@ -50,7 +51,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function findById(int $id): mixed
     {
-        return $this->entity->find($id);
+        return $this->table->find($id);
     }
 
     /**
@@ -58,7 +59,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function findWhere(string $column, mixed $value): mixed
     {
-        return $this->entity->where($column, $value)->get();
+        return $this->table->where($column, $value)->get();
     }
 
     /**
@@ -66,7 +67,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function findWhereFirst(string $column, mixed $value): mixed
     {
-        return $this->entity->where($column, $value)->first();
+        return $this->table->where($column, $value)->first();
     }
 
     /**
@@ -74,7 +75,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function paginate(int $perPage = 10): mixed
     {
-        return $this->entity->paginate($perPage);
+        return $this->table->paginate($perPage);
     }
 
     /**
@@ -82,7 +83,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function store(array $payload): mixed
     {
-        return $this->entity->create($payload);
+        return $this->table->create($payload);
     }
 
     /**
@@ -90,7 +91,7 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function update(int $id, array $payload): mixed
     {
-        return $this->findById($id)->update($payload);
+        return $this->table->findById($id)->update($payload);
     }
 
     /**
@@ -98,6 +99,6 @@ abstract class BaseEloquentRepository implements RepositoryContract
      */
     public function delete(int $id): mixed
     {
-        return $this->findById($id)->delete();
+        return $this->table->findById($id)->delete();
     }
 }
