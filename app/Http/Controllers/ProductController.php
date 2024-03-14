@@ -5,23 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Repositories\Contracts\ProductRepositoryContract;
 
 class ProductController extends Controller
 {
+    /**
+     * The data model for this controller
+     */
+    protected ProductRepositoryContract $repository;
+
+    /**
+     * Create a new instance of this controller
+     */
+    public function __construct(ProductRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->repository->findAll();
     }
 
     /**
@@ -29,23 +35,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        //
+        return $this->repository->store($request->all());
     }
 
     /**
@@ -53,7 +43,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        return $this->repository->update($product->id, $request->all());
     }
 
     /**
@@ -61,6 +51,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        return $this->repository->delete($product->id);
     }
 }
