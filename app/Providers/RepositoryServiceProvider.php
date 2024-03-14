@@ -8,6 +8,10 @@ use App\Repositories\Core\Eloquent\ProductEloquentRepository;
 use App\Repositories\Core\QueryBuilder\CategoryQueryBuilderRepository;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Repository service provider to bind repository contracts and concrete classes
+ * To alternate between EloquentORM and Query Builder just change the concrete class in binders
+ */
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
