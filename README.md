@@ -1,7 +1,7 @@
 <div align="center">
   <h1>CRUD PRODUCTS</h1>
 
-  <img src="https://skills.thijs.gg/icons?i=laravel,docker,mysql,vscode,github,markdown" />
+  <img src="https://skillicons.dev/icons?i=laravel,docker,mysql,vscode,github,markdown" />
 
   <p>A simple products panel to manage using Laravel and Filament</p>
 </div>
